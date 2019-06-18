@@ -377,10 +377,10 @@ server <- function(input, output, session) {
 	)
 	
     output$footer <- renderText(get_footer_text())
-	output$ditext <- renderText('<p>For more details on the format required for your data dictionary see <a href="http://www.fecrt.com/BNB/", target="_blank">this page (opens in a new window)</a></p>')
+	output$ditext <- renderText('<p>For more details on the format required for your data see <a href="http://www.fecrt.com/BNB/", target="_blank">this page (opens in a new window)</a></p>')
 	
 	output$instructionstext <- renderText(get_instructions_text())
-	
+
 	outputOptions(output, "showreset", suspendWhenHidden=FALSE)
 	outputOptions(output, "showresults", suspendWhenHidden=FALSE)
 	
