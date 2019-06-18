@@ -1,5 +1,8 @@
-tidyepi <- function(){
+tidyepi <- function(...){
 	
-	runApp(list(ui=shiny_ui, server=shiny_server))
+	# Make any previously saved dictionaries available:
+	dictionaries <- get_dictionaries()
+	
+	runApp(appDir=get_shiny(eval=TRUE), ...)
 	
 }

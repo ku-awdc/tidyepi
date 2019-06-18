@@ -1,1 +1,5 @@
 exportPattern("^[[:alpha:]]+")
+
+import(shiny)
+import(rhandsontable)
+importFrom(shinythemes, shinytheme)

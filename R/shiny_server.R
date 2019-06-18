@@ -1,22 +1,19 @@
-# library('shiny')
-# library('rhandsontable')
-
-# options(stringsAsFactors=FALSE)
-
-# pubdate <- '2017-09-01'
+options(stringsAsFactors=FALSE)
+pubdate <- '2017-09-01'
 
 # ### For testing:
 # testing <- FALSE
-# # testing <- TRUE
+testing <- TRUE
 # ###
 
-# initl <- "<br><h4>Error: Data inputs have not been initialised</h4>"
+initl <- "<br><h4>Error: Data inputs have not been initialised</h4>"
 
-# blankdf <- data.frame(Data=numeric(0))
+blankdf <- data.frame(Data=numeric(0))
+blankdict <- data.frame(Name=NA, Min=NA, Type=factor(NA, levels=c('One','Two')))
 
 shiny_server <- function(input, output, session) {
 
-	rv <- reactiveValues(predata = blankdf, postdata = blankdf, prebackup = blankdf, postbackup = blankdf, summaries="Select study design and enter data before calculating results!", initerrors="", dataerrors="", showreset=1, showresults=0, datainit=0, prelabel=initl, postlabel=initl, scalelabel="", prestr="control group / pre-treatment", poststr="treatment group / post-treatment", edt1=1, edt2=1)
+	rv <- reactiveValues(dictionary = blankdict, predata = blankdf, postdata = blankdf, prebackup = blankdf, postbackup = blankdf, summaries="Select study design and enter data before calculating results!", initerrors="", dataerrors="", showreset=1, showresults=0, datainit=0, prelabel=initl, postlabel=initl, scalelabel="", prestr="control group / pre-treatment", poststr="treatment group / post-treatment", edt1=1, edt2=1)
 
 	observeEvent(input$reset, {
 		# Required to reset if dims don't change:
@@ -336,11 +333,8 @@ shiny_server <- function(input, output, session) {
 	})
 	
 	fluidPage(
-		output$predata <- renderRHandsontable({
-			rhandsontable(rv$predata, rowHeaders=NULL, useTypes = FALSE, stretchH = "none")
-		}),
-		output$postdata <- renderRHandsontable({
-			rhandsontable(rv$postdata, rowHeaders=NULL, useTypes = FALSE, stretchH = "none")
+		output$dictionary <- renderRHandsontable({
+			rhandsontable(rv$dictionary, colNames=names(blankdict), rowHeaders=NULL, useTypes = TRUE, stretchH = "none")
 		}),
 		output$summaries <- renderText({
 			rv$summaries
@@ -368,8 +362,11 @@ shiny_server <- function(input, output, session) {
 		})
 	)
 	
-    output$footer <- renderText(paste0('<p align="center">Beta Negative Binomial method analysis tool for FECRT data by Matthew Denwood (last updated ', pubdate, ')<br><a href="http://www.fecrt.com/BNB/", target="_blank">Click here for help (opens in a new window)</a></p>'))
-
+    output$footer <- renderText(get_footer_text())
+	output$ditext <- renderText('<p>For more details on the format required for your data dictionary see <a href="http://www.fecrt.com/BNB/", target="_blank">this page (opens in a new window)</a></p>')
+	
+	output$instructionstext <- renderText(get_instructions_text())
+	
 	outputOptions(output, "showreset", suspendWhenHidden=FALSE)
 	outputOptions(output, "showresults", suspendWhenHidden=FALSE)
 	

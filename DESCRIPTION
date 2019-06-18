@@ -1,6 +1,6 @@
 Package: tidyepi
 Type: Package
-Title: Automated tools for clean and tidy epidemiological datasets
+Title: Automated Tools for Clean and Tidy Epidemiological Datasets
 Version: 0.1-1
 Date: 2019-06-18
 Authors@R: c(person("Matthew", "Denwood", role=c("aut","cre"), email="md@sund.ku.dk"), 
@@ -27,3 +27,4 @@ VignetteBuilder: knitr
 Description: Imports and checks datasets ensuring that the data contained therein
 	conform to the specifications provided in a given data dictionary
 License: GPL (>= 3)
+Encoding: UTF-8
