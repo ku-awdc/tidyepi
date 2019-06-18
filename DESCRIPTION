@@ -1,0 +1,29 @@
+Package: tidyepi
+Type: Package
+Title: Automated tools for clean and tidy epidemiological datasets
+Version: 0.1-1
+Date: 2019-06-18
+Authors@R: c(person("Matthew", "Denwood", role=c("aut","cre"), email="md@sund.ku.dk"), 
+			person("Carsten", "Thure Kirkeby", role=c("ctb")),
+			person("Søren", "Saxmose Nielsen", role=c("ctb")) )
+Maintainer: Matthew Denwood <md@sund.ku.dk>
+Depends:
+    R (>= 2.14.0),
+	tidyverse
+Imports:
+	stats,
+	utils,
+	methods,
+	readxl,
+	rlang,
+	ggplot2,
+	dplyr,
+	shiny,
+	rhandsontable,
+	shinythemes
+Suggests:
+    knitr
+VignetteBuilder: knitr
+Description: Imports and checks datasets ensuring that the data contained therein
+	conform to the specifications provided in a given data dictionary
+License: GPL (>= 3)
