@@ -255,7 +255,7 @@ shiny_server <- function(input, output, session) {
 		
 		obsred <- round(100 * (1 - postmean / premean), 1)
 		
-		res <- bayescount:::fecrt_pee_wrap(predata, postdata, H0_1=(input$target-input$nim)/100, H0_2=input$target/100, edt_pre=rv$edt1, edt_post=rv$edt2, rep_pre=Rpre, rep_post=Rpost, pool_pre=1, pool_post=1, prob_priors=c(1,1), k_change=NA, true_k=NA, delta_method=1, beta_iters=10^5)
+		res <- fecrt_pee_wrap(predata, postdata, H0_1=(input$target-input$nim)/100, H0_2=input$target/100, edt_pre=rv$edt1, edt_post=rv$edt2, rep_pre=Rpre, rep_post=Rpost, pool_pre=1, pool_post=1, prob_priors=c(1,1), k_change=NA, true_k=NA, delta_method=1, beta_iters=10^5)
 			# Use the delta method where possible but fall back on the computational method where necessary
 		
 		outstring <- paste0("<strong>Summary statistics:</strong><br> &nbsp; The ", rv$prestr, " mean is ", round(premean, 1), "EPG (estimated k=", round(estprek, 1), ", sample size = ", Npre, if(Rpre>1) paste0("x", Rpre), ")<br> &nbsp; The ", rv$poststr, " mean is ", round(postmean, 1), "EPG (estimated k=", round(estpostk, 1), ", sample size = ", Npost, if(Rpost>1) paste0("x", Rpost), ")<br><br>")
