@@ -8,6 +8,10 @@ library('readxl')
 library('rhandsontable')
 
 # Also need to make other things visible here:
+instructions_text <- get_instructions_text()
+footer_text <- get_footer_text()
+upload_text <- '<p>For more details on the format required for your data see <a href="http://www.fecrt.com/BNB/", target="_blank">this page (opens in a new window)</a></p>'
+
 blankdict <- data.frame(Name=numeric(0))
 
 options(stringsAsFactors=FALSE)
@@ -24,11 +28,70 @@ initl <- "<br><h4>Error: Data inputs have not been initialised</h4>"
 
 blankdf <- data.frame(Data=numeric(0))
 
-
 server <- function(input, output, session) {
+	
+	rv <- reactiveValues(allfiles = character(0), upload_fb = "", check_output = list(), 
+		dictionary = blankdict, predata = blankdf, postdata = blankdf, prebackup = blankdf, postbackup = blankdf, summaries="Select study design and enter data before calculating results!", initerrors="", dataerrors="", showreset=1, showresults=0, datainit=0, prelabel=initl, postlabel=initl, scalelabel="", prestr="control group / pre-treatment", poststr="treatment group / post-treatment", edt1=1, edt2=1)
+	 
+    reactive({
+		input$data_files$name
+		browser()
+    })
+	
+	fluidPage(
 
-	rv <- reactiveValues(dictionary = blankdict, predata = blankdf, postdata = blankdf, prebackup = blankdf, postbackup = blankdf, summaries="Select study design and enter data before calculating results!", initerrors="", dataerrors="", showreset=1, showresults=0, datainit=0, prelabel=initl, postlabel=initl, scalelabel="", prestr="control group / pre-treatment", poststr="treatment group / post-treatment", edt1=1, edt2=1)
+		output$upload_fb <- renderText({
+			if(length(rv$allfiles)>0)
+				paste0("<p>Files already uploaded:<br>", paste(names(rv$allfiles), collapse='<br>'), '</p>')
+			else
+				""
+		}),
+		
+		output$process_fb <- renderText({
+			if(length(rv$allfiles)==0)
+				"<p>No files have been uploaded</p>"
+			else if(length(rv$check_output)==0)
+				"<p>No files have been processed</p>"
+		})
 
+	)
+	
+	output$file_upload <- renderUI({
+		# Create a dependency with the reset and upload more buttons:
+		input$reset_files  
+		input$upload_more  
+		fileInput("data_files", "Data file:", accept=c(".xlsx", ".xls", ".csv"), multiple=TRUE)
+	})
+	
+
+	observeEvent(input$upload_more, {
+		print("Upload more")
+		nf <- input$data_files[,'datapath']
+		names(nf) <- input$data_files[,'name']
+		rv$allfiles <- c(rv$allfiles, nf)
+	})
+	
+	observeEvent(input$reset_files, {
+		print("Reset files")
+		rv$allfiles <- character(0)
+		output$process_fb <- renderText("<p>No files have been processed</p>")
+	})
+	
+	observeEvent(input$process, {
+		print("Process files")
+		nf <- input$data_files[,'datapath']
+		names(nf) <- input$data_files[,'name']
+		rv$allfiles <- c(rv$allfiles, nf)
+		if(length(rv$allfiles)==0){
+			output$process_fb <- renderText("<p>Error:  no files uploaded</p>")
+		}else{
+			files <- rv$allfiles
+			rv$check_output <- process_files(files)
+			rv$allfiles <- character(0)
+			output$process_fb <- renderText(paste0("<p>A total of ", length(files), " were processed:</p>", paste(paste0("<p>", names(files), "</p"), collapse='\n')))
+		}
+	})
+	
 	observeEvent(input$reset, {
 		# Required to reset if dims don't change:
 		rv$predata <- NULL
@@ -376,10 +439,10 @@ server <- function(input, output, session) {
 		})
 	)
 	
-    output$footer <- renderText(get_footer_text())
-	output$ditext <- renderText('<p>For more details on the format required for your data see <a href="http://www.fecrt.com/BNB/", target="_blank">this page (opens in a new window)</a></p>')
+    output$footer_text <- renderText(footer_text)
+	output$upload_text <- renderText(upload_text)
 	
-	output$instructionstext <- renderText(get_instructions_text())
+	output$instructions_text <- renderText(instructions_text)
 
 	outputOptions(output, "showreset", suspendWhenHidden=FALSE)
 	outputOptions(output, "showresults", suspendWhenHidden=FALSE)

@@ -16,3 +16,8 @@ set_shinyserver <- function(status=TRUE){
 	tidyepi_env$shinyserver <- status
 }
 
+
+process_files <- function(files){
+	
+	print('processing')
+}

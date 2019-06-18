@@ -13,23 +13,29 @@ fluidPage(
 	tabsetPanel(
 		tabPanel("Instructions",
 			hr(),
-			htmlOutput('instructionstext', style="text-align:left; ", width="100%"),
+			htmlOutput('instructions_text', style="text-align:left; ", width="100%"),
 			hr()
 		),
 		tabPanel("Upload",
-			# Conditional panel here for pre-loaded (and previously checked) dictionaries
+			# Include a conditional panel here to include previously (and pre) loaded files
 			hr(),
-			h4("Upload dictionary and data file(s)", style="text-align:left; "),
+			h4("Upload data file(s)", style="text-align:left; "),
 			hr(),
-			htmlOutput('ditext', style="text-align:left; ", width="100%"),
-		    fileInput("in_file", "Input file:", accept=c("txt/csv", "text/comma-separated-values,text/plain", ".csv")),
-			actionButton("upload_data", "Upload File(s)")
+			htmlOutput('upload_text', style="text-align:left; ", width="100%"),
+		    #fileInput("data_files", "Data file:", accept=c(".xlsx", ".xls", ".csv"), multiple=TRUE),
+			uiOutput('file_upload'),
+			htmlOutput("upload_fb", style="text-align:left; ", width="100%"),
+			hr(),
+			actionButton("upload_more", "Upload More File(s)"),
+			actionButton("reset_files", "Reset Uploaded File(s)")		
 		),
 		tabPanel("Process",
 			# Conditional panel here for pre-loaded (and previously checked) dictionaries
 			hr(),
 			h4("Upload dictionary and data file(s)", style="text-align:left; "),
-			hr()
+			hr(),
+			actionButton("process", "Process Uploaded File(s)"),
+			htmlOutput("process_fb", style="text-align:left; ", width="100%")
 		),
 		tabPanel("Results", 
 			hr(),
@@ -44,6 +50,6 @@ fluidPage(
 	),
 
 	hr(),
-	htmlOutput('footer'),
+	htmlOutput('footer_text'),
 	hr()
 )
