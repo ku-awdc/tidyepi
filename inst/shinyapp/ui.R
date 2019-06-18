@@ -1,8 +1,6 @@
+library('shinythemes')
 
-
-# Nav list for tabs:  https://shiny.rstudio.com/articles/layout-guide.html
-
-shiny_ui <- expression(fluidPage(
+fluidPage(
 
 	theme = shinytheme("cerulean"),
 
@@ -58,4 +56,4 @@ shiny_ui <- expression(fluidPage(
 	hr(),
 	htmlOutput('footer'),
 	hr()
-))
+)

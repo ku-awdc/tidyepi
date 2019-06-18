@@ -1,17 +1,31 @@
+# Make necessary packages available:
+library('tidyepi')
+library('tidyverse')
+library('knitr')
+library('shiny')
+library('shinythemes')
+library('readxl')
+library('rhandsontable')
+
+# Also need to make other things visible here:
+blankdict <- data.frame(Name=numeric(0))
+
 options(stringsAsFactors=FALSE)
+
 pubdate <- '2017-09-01'
 
-# ### For testing:
-# testing <- FALSE
-testing <- TRUE
-# ###
+### For testing:
+testing <- FALSE
+# testing <- TRUE
+###
+
 
 initl <- "<br><h4>Error: Data inputs have not been initialised</h4>"
 
 blankdf <- data.frame(Data=numeric(0))
-blankdict <- data.frame(Name=NA, Min=NA, Type=factor(NA, levels=c('One','Two')))
 
-shiny_server <- function(input, output, session) {
+
+server <- function(input, output, session) {
 
 	rv <- reactiveValues(dictionary = blankdict, predata = blankdf, postdata = blankdf, prebackup = blankdf, postbackup = blankdf, summaries="Select study design and enter data before calculating results!", initerrors="", dataerrors="", showreset=1, showresults=0, datainit=0, prelabel=initl, postlabel=initl, scalelabel="", prestr="control group / pre-treatment", poststr="treatment group / post-treatment", edt1=1, edt2=1)
 
