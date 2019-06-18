@@ -1,4 +1,6 @@
+library('shiny')
 library('shinythemes')
+library('rhandsontable')
 
 fluidPage(
 
