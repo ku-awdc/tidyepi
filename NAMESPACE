@@ -3,3 +3,5 @@ exportPattern("^[[:alpha:]]+")
 import(shiny)
 import(rhandsontable)
 importFrom(shinythemes, shinytheme)
+
+importFrom(readxl, excel_sheets, read_excel)

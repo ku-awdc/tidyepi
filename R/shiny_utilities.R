@@ -1,6 +1,3 @@
-tidyepi_env <- new.env()
-tidyepi_env$shinyserver <- FALSE
-
 get_instructions_text <- function(){
 	return(paste(readLines(system.file('shinytext','instructions.html', package='tidyepi')), collapse='\n'))
 }
