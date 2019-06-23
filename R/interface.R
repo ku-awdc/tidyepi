@@ -26,7 +26,7 @@
 
 #' @export TidyContainer
 TidyContainer <- setRefClass('TidyContainer',
-	fields = list(rawdata='list', metadata='data.frame', key='data.frame', processed='list', stage='numeric', name='character'),
+	fields = list(rawdata='list', metadata='data.frame', key='data.frame', processed='list', stage='numeric', name='character', tempdir='character'),
 
 	methods = list(
 
@@ -132,13 +132,15 @@ TidyContainer <- setRefClass('TidyContainer',
 		invisible(key)
 	},
 
-	ExtractData = function(){
+	ExtractData = function(interactive=FALSE){
 		"Identify and extract the datasets from the internally stored list of files"
 
 		if(.self$stage < 2){
 			.self$ExtractKey()
 		}
-
+		
+		if(interactive) stop("Interactive mode not yet supported")
+		
 		# Find the unique datasets being used:
 		datasetnames <- unique(.self$key$Dataset)
 
@@ -185,7 +187,7 @@ TidyContainer <- setRefClass('TidyContainer',
 
 		save(list=names(ee), file=filename, envir=as.environment(ee))
 	},
-
+	
 	GetRaw = function(){
 		return(.self$rawdata)
 	}

@@ -20,7 +20,8 @@ Imports:
 	dplyr,
 	shiny,
 	rhandsontable,
-	shinythemes
+	shinythemes,
+	zip
 Suggests:
     knitr
 VignetteBuilder: knitr
