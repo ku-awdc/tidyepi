@@ -140,13 +140,15 @@ TidyContainer <- setRefClass('TidyContainer',
 		invisible(key)
 	},
 
-	ExtractData = function(){
+	ExtractData = function(interactive=FALSE){
 		"Identify and extract the datasets from the internally stored list of files"
 
 		if(.self$stage < 2){
 			.self$ExtractKey()
 		}
-
+		
+		if(interactive) stop("Interactive mode not yet supported")
+		
 		# Find the unique datasets being used:
 		datasetnames <- unique(.self$key$Dataset)
 
