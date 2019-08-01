@@ -26,14 +26,19 @@
 
 #' @export TidyContainer
 TidyContainer <- setRefClass('TidyContainer',
-	fields = list(rawdata='list', metadata='data.frame', key='data.frame', processed='list', stage='numeric', name='character'),
+	fields = list(tempdir='character', rawdata='list', metadata='data.frame', key='data.frame', processed='list', stage='numeric', name='character'),
 
 	methods = list(
 
-	initialize = function(){
+	initialize = function(type='interactive'){
 		"Set up a TidyContainer object before importing files"
 
+		# Changes a few options for output etc:
+		stopifnot(type %in% c('interactive','automated','shiny'))
+
 		.self$rawdata <- list()
+		.self$tempdir <- tempfile()
+		dir.create(.self$tempdir)
 
 		zeros <- rep(0, length(tidyepi_env$mtdtreqcols))
 		names(zeros) <- tidyepi_env$mtdtreqcols
@@ -65,6 +70,9 @@ TidyContainer <- setRefClass('TidyContainer',
 			cat("Only ", length(newfiles), " of the ", length(filepaths), " specified files could be read\n", sep="")
 		}
 
+		# TODO: is this vectorised?
+		file.copy(filepaths, .self$tempdir)
+
 		# It is OK for the same filename and/or sheetname to be re-used in the raw data:
 		.self$rawdata <- c(.self$rawdata, newfiles)
 		.self$stage <- 0
@@ -76,7 +84,7 @@ TidyContainer <- setRefClass('TidyContainer',
 		"Read a data frame already existing in R and store it in the TidyContainer"
 
 		stop("Not yet implemented")
-		# TODO
+		# TODO - write to tempdir also
 		# Check that it inherits from data.frame and has colnames, then convert all column types to text
 
 		.self$stage <- 0
@@ -142,6 +150,8 @@ TidyContainer <- setRefClass('TidyContainer',
 		# Find the unique datasets being used:
 		datasetnames <- unique(.self$key$Dataset)
 
+		# TODO: should process and check all variable names are present but no more
+
 		# Process each one in turn:
 		prcsd <- vector('list', length(datasetnames))
 		names(prcsd) <- datasetnames
@@ -160,13 +170,44 @@ TidyContainer <- setRefClass('TidyContainer',
 		invisible(prcsd)
 	},
 
+	ExtractCorrections = function(name="corrections", optional=TRUE){
+		"Identify and extract a corrections sheet from the internally stored list of files"
+
+		if(.self$stage < 2){
+			.self$ExtractKey()
+		}
+
+		# TODO
+
+		# Save and return invisibly:
+		invisible(data.frame())
+	},
+
+	CheckData = function(){
+		"Run the data checks"
+
+		if(.self$stage < 3){
+			.self$ExtractData()
+		}
+
+		# First apply the corrections, then check the data
+
+		# Returns a list with four elements:
+		# any_errors (logical) - were any errors encountered?
+		# error_text - string vector (one line per element) of errors that could be e.g. cat to file
+		# any_corrections (logical) - have any corrections been generated?
+		# corrections_df - a data frame of corrections to be e.g. written to csv file
+
+		return(list(any_error=FALSE, error_text=character(0), any_corrections=FALSE, corrections_df=data.frame()))
+	},
+
 	WriteProcessed = function(filename=NULL, overwrite=FALSE){
 		"Write the processed data to an .rdata file"
 
-		if(.self$stage < 2){
+		if(.self$stage < 3){
 			.self$ExtractData()
 		}
-		
+
 		if(is.null(filename)){
 			filename <- paste0(.self$name, '.rdata')
 		}
@@ -174,7 +215,7 @@ TidyContainer <- setRefClass('TidyContainer',
 		if(file.exists(filename) && !overwrite){
 			stop("Will not overwrite existing file when overwrite=FALSE")
 		}
-		
+
 		ee <- list()
 		ee$metadata <- .self$metadata
 		ee$key <- .self$key
@@ -186,9 +227,46 @@ TidyContainer <- setRefClass('TidyContainer',
 		save(list=names(ee), file=filename, envir=as.environment(ee))
 	},
 
+	CreateOutputs = function(path=getwd(), zip=FALSE, overwrite=FALSE){
+		"Create a folder (optionally zipped) containing all outputs"
+
+		foldername <- file.path(path, .self$name)
+		if(file.exists(foldername)){
+			if(overwrite){
+				unlink(foldername, recursive=TRUE)
+			}else{
+				stop("Folder", .self$name, "already exists and overwrite=FALSE")
+			}
+		}
+		zipname <- paste0(foldername, '.zip')
+		if(zip && file.exists(zipname)){
+			if(overwrite){
+				unlink(zipname, recursive=TRUE)
+			}else{
+				stop("File", zipname, "already exists and overwrite=FALSE")
+			}
+		}
+
+		dir.create(foldername)
+		# Add files etc into here:
+		WriteProcessed(file.path(foldername, "processed_data.rdata"))
+		rfn <- list.files(.self$tempdir)
+		file.copy(file.path(.self$tempdir, rfn), file.path(foldername, rfn))
+
+		# Invisibly return the path to the file or folder:
+		if(zip){
+			zipr(zipname, foldername, recurse=TRUE)
+			unlink(foldername, recursive=TRUE)
+			invisible(zipname)
+		}else{
+			invisible(foldername)
+		}
+
+	},
+
 	GetRaw = function(){
 		return(.self$rawdata)
 	}
 
-
+	# TODO: finaliser with unlink(.self$tempdir)
 ))

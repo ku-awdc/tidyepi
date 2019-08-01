@@ -1,6 +1,5 @@
 library('shiny')
 library('shinythemes')
-library('rhandsontable')
 
 fluidPage(
 
@@ -17,35 +16,25 @@ fluidPage(
 			hr()
 		),
 		tabPanel("Upload",
-			# Include a conditional panel here to include previously (and pre) loaded files
+			# Maybe include a conditional panel here to include previously (and pre) loaded files and/or dictionaries??
 			hr(),
-			h4("Upload data file(s)", style="text-align:left; "),
+			h4("Upload data file", style="text-align:left; "),
 			hr(),
 			htmlOutput('upload_text', style="text-align:left; ", width="100%"),
-		    #fileInput("data_files", "Data file:", accept=c(".xlsx", ".xls", ".csv"), multiple=TRUE),
-			uiOutput('file_upload'),
-			htmlOutput("upload_fb", style="text-align:left; ", width="100%"),
-			hr(),
-			actionButton("upload_more", "Upload More File(s)"),
-			actionButton("reset_files", "Reset Uploaded File(s)")		
+		    fileInput("data_file", "Data file:", accept=c(".xlsx", ".xls"), multiple=FALSE),
+			actionButton("process", "Process")
 		),
-		tabPanel("Process",
-			# Conditional panel here for pre-loaded (and previously checked) dictionaries
+		tabPanel("Output",
 			hr(),
-			h4("Upload dictionary and data file(s)", style="text-align:left; "),
+			h4("Error messages and/or data entry mistakes shown below", style="text-align:left; "),
 			hr(),
-			actionButton("process", "Process Uploaded File(s)"),
-			htmlOutput("process_fb", style="text-align:left; ", width="100%")
+			htmlOutput("output_text", style="text-align:left; ", width="100%")
 		),
-		tabPanel("Results", 
+		tabPanel("Download", 
 			hr(),
-			h4("Select Test Parameters", style="text-align:center; "),			
+			h4("Download correction CSV or complete ZIP file when available", style="text-align:left; "),			
 			hr()
-		),
-		tabPanel("Output", 
-			hr(),
-			h4("Select Test Parameters", style="text-align:center; "),			
-			hr()
+			# Need to conditionally add a download button here and pass the file to be downloaded back from server
 		)
 	),
 

@@ -1,4 +1,43 @@
-## Simplest usage:
+## Shiny usage:
+
+# Launch the shiny app for testing purposes:
+shiny::runApp('inst/shinyapp/')
+
+
+
+
+## Code effectively run by Shiny that must work:
+tc <- new("TidyContainer", type='shiny')
+tc$ReadFiles(system.file("extdata", "example_afdata.xlsx", package = "tidyepi"))
+tc$ExtractMetadata(name="metadata")
+tc$ExtractKey(name="key")
+tc$ExtractData()
+tc$ExtractCorrections(name="corrections", optional=TRUE)
+checks <- tc$CheckData()
+if(checks$any_error){
+	error_text <- paste(checks$error_text, collapse='\n')
+	# This error_text should be given to the user somehow:
+
+	# If a corrections CSV file is produced allow the user to download it:
+	if(checks$any_corrections){
+		download_file <- 'corrections.csv'
+		write.csv(check$corrections_df, file=download_file, row.names=FALSE)
+	}
+}else{
+	# If there are no errors generate the outputs as a zip file in a location we provide:
+	path <- getwd()
+	download_file <- tc$CreateOutputs(path=path, zip=TRUE, overwrite=TRUE)
+}
+
+
+
+
+
+
+
+
+## Simplest R usage:
+
 
 # If necessary:
 # devtools::install_github("ku-awdc/tidyepi")
@@ -20,12 +59,6 @@ tc <- new("TidyContainer")
 tc$GetRaw()
 tc$ReadFiles(ff, c("afdata", "fruits"))
 tc$ReadFiles(ff[2], "fruits")
-
-retrieve_ds("metadata", NULL, tc$rawdata)
-retrieve_ds("cock", NULL, tc$rawdata)
-retrieve_ds("fruits", NULL, tc$rawdata)
-retrieve_ds("", c("afdata","metadata"), tc$rawdata)
-retrieve_ds("", c("afdata","cock"), tc$rawdata)
 
 (tc$ExtractMetadata())
 (tc$ExtractKey())
