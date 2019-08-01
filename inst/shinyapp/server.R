@@ -10,7 +10,7 @@ library('zip')
 instructions_text <- paste(readLines(system.file('shinytext','instructions.html', package='tidyepi')), collapse='\n')  # Retrieves installed version!
 # Note: the instructions need to be updated
 
-footer_text <- paste0('<p align="left">tidyepi version ', packageDate('tidyepi'), ' (', packageVersion('tidyepi'), '): &nbsp <a href="http://www.fecrt.com/BNB/", target="_blank">Click here for more information (opens in a new window)</a></p>')
+footer_text <- paste0('<p align="left">tidyepi version ', packageDate('tidyepi'), ' (', packageVersion('tidyepi'), '): &nbsp <a href="", target="_blank">Click here for more information (opens in a new window)</a></p>')
 upload_text <- '<p>For more details on the format required for your data see <a href="", target="_blank">a page we need to create (opens in a new window)</a></p>'
 # Note: webpage needs to be created!  Matt to do as part of section website on GitHub
 
@@ -57,7 +57,7 @@ server <- function(input, output, session) {
 			}
 		}else{
 			# If there are no errors generate the outputs as a zip file in a location we provide:
-			path <- getwd()
+			path <- tempdir()
 			download_file <- tc$CreateOutputs(path=path, zip=TRUE, overwrite=TRUE)						
 		}
 		
