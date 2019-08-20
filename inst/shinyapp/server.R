@@ -17,9 +17,10 @@ upload_text <- '<p>For more details on the format required for your data see <a 
 server <- function(input, output, session) {
 	
 	rv <- reactiveValues(download_file="", output_text="No file uploaded yet")
-		
+
 	observeEvent(input$process, {
 		
+	  
 		# Default return values:
 		download_file <- ""
 		output_text <- ""
@@ -49,6 +50,13 @@ server <- function(input, output, session) {
 		if(checks$any_error){
 			error_text <- paste(checks$error_text, collapse='\n')
 			# This error_text should be given to the user somehow:
+		
+			#### Carstens playground ####
+			output$values <- renderTable({
+			  tmp <- strsplit(error_text, "\n")
+			  data.frame( matrix(tmp, ncol=1))
+			})
+			#############################
 			
 			# If a corrections CSV file is produced allow the user to download it:
 			if(checks$any_corrections){
@@ -61,10 +69,11 @@ server <- function(input, output, session) {
 			download_file <- tc$CreateOutputs(path=path, zip=TRUE, overwrite=TRUE)						
 		}
 		
+
 		# Stuff that we need to pass back to the UI:
 		rv$download_file <- download_file
 		rv$output_text <- error_text
-
+		
 	})
 	
 	fluidPage(

@@ -28,6 +28,7 @@ fluidPage(
 			hr(),
 			h4("Error messages and/or data entry mistakes shown below", style="text-align:left; "),
 			hr(),
+			tableOutput("values"),
 			htmlOutput("output_text", style="text-align:left; ", width="100%")
 		),
 		tabPanel("Download", 
@@ -37,7 +38,6 @@ fluidPage(
 			# Need to conditionally add a download button here and pass the file to be downloaded back from server
 		)
 	),
-
 	hr(),
 	htmlOutput('footer_text'),
 	hr()

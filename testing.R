@@ -5,7 +5,6 @@ shiny::runApp('inst/shinyapp/')
 
 
 
-
 ## Code effectively run by Shiny that must work:
 tc <- new("TidyContainer", type='shiny')
 tc$ReadFiles(system.file("extdata", "example_afdata.xlsx", package = "tidyepi"))
