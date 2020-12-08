@@ -1,6 +1,5 @@
-<!-- badges: start -->
 # R + AppVeyor [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/ku-awdc/tidyepi?branch=master&svg=true)](https://ci.appveyor.com/project/ku-awdc/tidyepi)
-<!-- badges: end -->
+
 
 # tidyepi
 Automated tools for clean and tidy epidemiological datasets
