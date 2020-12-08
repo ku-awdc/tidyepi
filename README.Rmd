@@ -1,5 +1,5 @@
 <!-- badges: start -->
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/ku-awdc/tidyepi?branch=master&svg=true)](https://ci.appveyor.com/project/ku-awdc/tidyepi)
+# R + AppVeyor [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/ku-awdc/tidyepi?branch=master&svg=true)](https://ci.appveyor.com/project/ku-awdc/tidyepi)
 <!-- badges: end -->
 
 # tidyepi
